@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Stoiti</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+
+    --bg: #fdf6f0;
+    --accent: #e8b4a0;
+    --text: #4a3f3a;
+    --soft: #f5e1d3;
+  }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 40px 20px;
+  }
+
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+    font-weight: normal;
+    margin-bottom: 10px;
+  }
+
+  header p {
+    font-style: italic;
+    color: #8a7a72;
+  }
+
+  .timeline {
+    margin-bottom: 60px;
+  }
+
+  .letter {
+  margin-bottom: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.letter-closed {
+  background: var(--soft);
+  padding: 25px;
+  text-align: center;
+  cursor: pointer;
+  border: 2px dashed var(--accent);
+  transition: transform 0.2s, opacity 0.3s;
+}
+
+.letter-closed:hover {
+  transform: translateY(-3px);
+}
+
+.letter-closed.locked {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(40%);
+}
+
+.letter-closed .icon {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.letter-closed .label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #8a7a72;
+}
+
+.letter-content {
+  display: none;
+  background: white;
+  border-left: 3px solid var(--accent);
+  padding: 20px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  animation: fadeIn 0.5s ease;
+}
+
+.letter-content h3 {
+  font-size: 0.8rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+.message-wrapper {
+  position: relative;
+  margin-bottom: 50px;
+  border-radius: 12px;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.message.revealed {
+  filter: blur(0);
+}
+
+
+  .message {
+  background: white;
+  padding: 35px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  filter: blur(9px);
+  user-select: none;
+  transition: filter 0.4s ease;
+}
+
+
+.swipe-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(253, 246, 240, 0.35);
+  cursor: grab;
+  transition: opacity 0.4s ease;
+  text-align: center;
+  padding: 20px;
+}
+
+.swipe-hint.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.swipe-hint .arrow {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  animation: slide 1.4s infinite;
+}
+
+@keyframes slide {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(10px); }
+}
+
+.swipe-hint span.text {
+  font-size: 0.9rem;
+  color: var(--text);
+  font-style: italic;
+}
+
+  .message p {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+  }
+
+  .question {
+    text-align: center;
+  }
+
+  .question h2 {
+    font-weight: normal;
+    margin-bottom: 30px;
+    font-size: 1.3rem;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  button {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 30px;
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+  }
+
+  button:hover {
+    transform: translateY(-2px);
+  }
+
+  #response-message {
+    display: none;
+    text-align: center;
+    margin-top: 30px;
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 60px;
+    font-size: 0.85rem;
+    color: #b0a49c;
+  }
+
+    @media (max-width: 600px) {
+    body {
+      padding: 25px 15px;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+    }
+
+    .message {
+      padding: 25px 20px;
+    }
+
+    .message p {
+      font-size: 1rem;
+    }
+
+    .buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    button {
+      width: 100%;
+      max-width: 250px;
+    }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <h1>Something I wanted to tell you</h1>
+    <p>For Stoiti Sefu Meu</p>
+  </header>
+
+ <div class="timeline">
+
+  <div class="letter" data-index="0">
+    <div class="letter-closed">
+      <span class="icon">💌</span>
+      <span class="label">Letter 1</span>
+    </div>
+    <div class="letter-content">
+      <h3>SONDER PARTY</h3>
+      <p>First time we talked was at Sonder. Tu cu nonchalanța ta si eu totally random am aparut acolo sa vorbesc cu Alex. Am inceput sa povestim despre cum ma cunosti pe mine de atat timp si toate dramele de la atletism cu Raymond si restu. Honestly it was really funny, but then I had to leave ca eram cu un grup de prieteni.</p>
+    </div>
+  </div>
+
+  <div class="letter" data-index="1">
+    <div class="letter-closed locked">
+      <span class="icon">🔒</span>
+      <span class="label">Letter 2</span>
+    </div>
+    <div class="letter-content">
+      <h3>ADD ANONIM PE SNAP</h3>
+      <p>Eram la karaoke night si te gasisem pe snap. Ma gandeam "hmmm oare imi va da add back?" in fact mi ai dat add back si a fost funny ca nu stiai cine sunt, pana m-a dat de gol Alex (il tin eu minte pe Alex) and then we started chatting like 2 str8 bros haha. Funny again ca eram la majoratu ala in Caras-Severin si vorbeam acolo si cand mi s-a facut rau de la combinatia aia de bautura. Dupa am avut grija de aia beti vorbele mele "le era frica de un bulangiu".</p>
+    </div>
+  </div>
+
+  <div class="letter" data-index="2">
+    <div class="letter-closed locked">
+      <span class="icon">🔒</span>
+      <span class="label">Letter 3</span>
+    </div>
+    <div class="letter-content">
+      <h3>FIRST ACTUAL MEETING</h3>
+      <p>Eu unul eram panicat ca nu stiu ce sa vorbesc cu tine, dar cand am vazut ca pot vorbi deschis cu tine si cat de funny esti si m-am simtit in largul meu total. I am really sorry that u had to go through those bad times. You really dont deserve that. You deserve the entire world.</p>
+    </div>
+  </div>
+
+  <div class="letter" data-index="3">
+    <div class="letter-closed locked">
+      <span class="icon">🔒</span>
+      <span class="label">Letter 4</span>
+    </div>
+    <div class="letter-content">
+      <h3>SLEEPING TOGETHER</h3>
+      <p>Well aici iti multumesc pentru ca ai venit 3 zile la mine ca sa dormim impreuna. Mi au placut sidequest-urile pe care le am facut impreuna. Ne am uitat la film impreuna, am fost pana la profi sa mi iau vin (care jumate din el l-am varsat pe jos), am dormit imbratisati impreuna. Au fost niste momente superbe honestly.</p>
+  </div>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="message-wrapper" id="message-wrapper">
+  <div class="message" id="message">
+    <p>Totusi vreau sa-mi cer scuze pentru ca te-am facut sa suferi. Nu am avut niciodata intentia sa fac pe cineva drag mie sa sufere.</p>
+    <p>That's why am stat pe ganduri de cand am ajuns in Bucuresti si cat eram in Varna, pentru ca vazusem the mood change si eu unul nu mi-am permis niciodata sa mint pe cineva. Daca intr-adevar stiu ca am gresit macar sa mi cer scuze pentru ca am fost crescut cu cei 7 ani de acasa.</p>
+    <p>Momentul cand am vazut ca mi-ai dat block pe snap si unfollow de pe insta a fost dureros. Nu vreau sa fiu sau sa par ca Vlad at all si chiar m-am pus in pielea ta si am realizat cat de dureros poate sa fie acest lucru pentru ca am patit-o de atatea ori mai ales dupa ce am avut o conexiune mai stransa cu cineva. So imi cer scuze. Da intr-adevar pentru mine distanta poate fi destul de grea pentru ca mi este foarte greu avand in vedere ca mi stii situatia cu ai mei but not just that ci pur si simplu i've never had something far away.</p>
+  </div>
+  <div class="swipe-hint" id="swipe-hint">
+    <span class="arrow">👉</span>
+    <span class="text">Trage pentru a citi</span>
+  </div>
+</div>
+
+<div class="question">
+  <h2>Honestly nu as vrea sa o terminam de tot. Imi esti foarte drag si nu vreau sa pierd o persoana atat de superba ca si tine. Esti inteligent, amuzant, educat, sportiv, tot tacamul cum s-ar spune. So that sums it up. What do you think?</h2>
+  <div class="buttons">
+    <button class="btn-primary" onclick="respond('da')">Hai să vorbim</button>
+    <button class="btn-secondary" onclick="respond('timp')">Am nevoie de timp</button>
+  </div>
+  <p id="response-message"></p>
+</div>
+
+<footer>
+  <p>Yours Truly, Jade</p>
+</footer>
+
+</div>
+
+<script>
+
+const letters = document.querySelectorAll('.letter');
+
+letters.forEach((letter) => {
+  const closed = letter.querySelector('.letter-closed');
+  const content = letter.querySelector('.letter-content');
+  const index = parseInt(letter.dataset.index);
+
+  closed.addEventListener('click', () => {
+    if (closed.classList.contains('locked')) return;
+    if (content.style.display === 'block') return;
+
+    content.style.display = 'block';
+    closed.style.display = 'none';
+
+    const nextIndex = index + 1;
+    const nextLetter = document.querySelector(`.letter[data-index="${nextIndex}"] .letter-closed`);
+    if (nextLetter) {
+      nextLetter.classList.remove('locked');
+      nextLetter.querySelector('.icon').textContent = '💌';
+    }
+  });
+});
+
+
+const messageEl = document.getElementById('message');
+const swipeHint = document.getElementById('swipe-hint');
+const wrapper = document.getElementById('message-wrapper');
+
+let startX = 0;
+let dragging = false;
+const threshold = 70;
+
+function startDrag(x) {
+  dragging = true;
+  startX = x;
+}
+
+function moveDrag(x) {
+  if (!dragging) return;
+  const delta = x - startX;
+  if (delta > threshold) {
+    reveal();
+  }
+}
+
+function endDrag() {
+  dragging = false;
+}
+
+function reveal() {
+  messageEl.classList.add('revealed');
+  swipeHint.classList.add('hidden');
+  dragging = false;
+}
+
+wrapper.addEventListener('touchstart', (e) => startDrag(e.touches[0].clientX));
+wrapper.addEventListener('touchmove', (e) => moveDrag(e.touches[0].clientX));
+wrapper.addEventListener('touchend', endDrag);
+
+wrapper.addEventListener('mousedown', (e) => startDrag(e.clientX));
+wrapper.addEventListener('mousemove', (e) => moveDrag(e.clientX));
+wrapper.addEventListener('mouseup', endDrag);
+wrapper.addEventListener('mouseleave', endDrag);
+
+  function respond(choice) {
+    const msg = document.getElementById('response-message');
+    msg.style.display = 'block';
+
+    if (choice === 'da') {
+      msg.textContent = "Mă bucur foarte mult. 💛";
+    } else {
+      msg.textContent = "E ok. Oricând vrei să vorbim, sunt aici.";
+    }
+
+    document.querySelector('.buttons').style.display = 'none';
+  }
+
+</script>
+
+</body>
+</html>
